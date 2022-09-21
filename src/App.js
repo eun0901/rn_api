@@ -1,13 +1,21 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import { View,Text,StyleSheet,TextInput,FlatList, StatusBar, SafeAreaView } from 'react-native';
+import { View,Text,StyleSheet,TextInput, Dimensions, FlatList, StatusBar, SafeAreaView } from 'react-native';
 import {DOMParser} from 'xmldom';
 import ReactDOM, { render } from 'react-dom';
+import styled from 'styled-components/native';
+import StationList from './StationList';
+
+const List = styled.ScrollView`
+flex: 1;
+width: ${({ width }) => width - 40}px;
+`;
 
 function App() {
 
   const [station, setStation] = useState('');
   const [result, setResult] = useState([]);
+  const width = Dimensions.get('window').width;
   //함수형 컴포넌트 const -> useEffect로 해결
 
   const handleStation = text => {
@@ -18,10 +26,10 @@ function App() {
     console.log("working");
         try{
         var xhr = new XMLHttpRequest();
-        var url = 'http://apis.data.go.kr/6410000/busstationservice/getBusStationList'; /*URL*/
-        var queryParams = '?' + encodeURIComponent('serviceKey') + '='+'UkgvlYP2LDE6M%2Blz55Fb0XVdmswp%2Fh8uAUZEzUbby3OYNo80KGGV1wtqyFG5IY0uwwF0LtSDR%2FIwPGVRJCnPyw%3D%3D'; /*Service Key*/
-        queryParams += '&' + encodeURIComponent('keyword') + '=' + encodeURIComponent(station); /**/
-        xhr.open('GET', url + queryParams);
+        const API_KEY = 'UkgvlYP2LDE6M%2Blz55Fb0XVdmswp%2Fh8uAUZEzUbby3OYNo80KGGV1wtqyFG5IY0uwwF0LtSDR%2FIwPGVRJCnPyw%3D%3D';
+            const url = 'http://apis.data.go.kr/6410000/busstationservice/getBusStationList'; /*URL*/
+            var queryParams = `${url}?serviceKey=${API_KEY}&keyword=${station}`;
+            xhr.open('GET', queryParams);
         xhr.onreadystatechange = function () {
             if (this.readyState == 4) {
             let xmlParser = new DOMParser();
@@ -70,9 +78,14 @@ function App() {
      returnKeyType="search"
       />
       <Text>{station}</Text>
-      <Text>{result.length}</Text>
+      <Text>{result.name}</Text>
       <Text>{console.log(result)}</Text>
-      </View>
+      <List width={width}>
+        {result.map(item => (
+          <StationList item={item}/>
+        ))}
+      </List>
+    </View>
   );
   
 }
