@@ -16,6 +16,7 @@ function App() {
   const [station, setStation] = useState('');
   const [result, setResult] = useState([]);
   const width = Dimensions.get('window').width;
+  const [stationid, setStationid] = useState('');
   //함수형 컴포넌트 const -> useEffect로 해결
 
   const handleStation = text => {
@@ -82,7 +83,10 @@ function App() {
       <Text>{console.log(result)}</Text>
       <List width={width}>
         {result.map(item => (
-          <StationList item={item}/>
+          <StationList item={item}
+          stationid={stationid}
+          setStationid={setStationid}
+          />
         ))}
       </List>
     </View>
