@@ -3,12 +3,34 @@ import { useState } from 'react';
 import { View,Text,StyleSheet,TextInput, Dimensions, FlatList, StatusBar, SafeAreaView } from 'react-native';
 import {DOMParser} from 'xmldom';
 import ReactDOM, { render } from 'react-dom';
-import styled from 'styled-components/native';
+import styled, { ThemeContext } from 'styled-components/native';
 import StationList from './StationList';
 
 const List = styled.ScrollView`
 flex: 1;
 width: ${({ width }) => width - 40}px;
+`;
+
+const ItemContainer = styled.TouchableOpacity`
+flex-direction: row;
+align-items: center;
+border-bottom-width: 1px;
+padding: 15px 20px;
+`;
+
+const ItemTextContainer = styled.View`
+flex: 1;
+flex-direction: column;
+`;
+
+const ItemTitle = styled.Text`
+font-size: 20px;
+font-weight: 600;
+`;
+
+const ItemDescription = styled.Text`
+font-size: 16px;
+margin-top: 5px;
 `;
 
 function App() {
@@ -79,16 +101,17 @@ function App() {
      returnKeyType="search"
       />
       <Text>{station}</Text>
-      <Text>{result.name}</Text>
       <Text>{console.log(result)}</Text>
-      <List width={width}>
-        {result.map(item => (
-          <StationList item={item}
+      <FlatList
+      keyExtractor={item => item.id}
+      data = {result}
+      renderItem = {({item}) => (
+      <StationList item={item}
           stationid={stationid}
           setStationid={setStationid}
           />
-        ))}
-      </List>
+  )}
+          />
     </View>
   );
   
